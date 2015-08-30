@@ -1,12 +1,11 @@
 export const FETCH_INFO = 'FETCH_INFO';
 export const UPDATE_INFO = 'UPDATE_INFO';
 
-export function fetchInfo() {
+export function fetchInfo(url) {
   return {
     type: FETCH_INFO,
-    async: {
-      url: 'http://localhost:8080/content/json/info.json'
-    }
+    async: true,
+    url: url
   };
 }
 

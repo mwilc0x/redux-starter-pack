@@ -6,9 +6,10 @@ describe('actions', () => {
     const url = 'http://localhost:8080/content/json/info.json';
     const expectedAction = {
       type: actions.FETCH_INFO,
-      async: { url: url }
+      async: true,
+      url: url
     };
-    expect(actions.fetchInfo()).toEqual(expectedAction);
+    expect(actions.fetchInfo(url)).toEqual(expectedAction);
   });
 
   it('should create an action to update info', () => {

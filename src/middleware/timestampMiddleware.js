@@ -1,4 +1,4 @@
-export default function promiseMiddleware(
+export default function timestampMiddleware(
   redux,
   moment = require('moment')
 ) {

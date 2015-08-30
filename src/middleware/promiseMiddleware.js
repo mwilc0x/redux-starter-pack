@@ -1,11 +1,8 @@
-export default function promiseMiddleware(
-  redux,
-  axios = require('axios')
-) {
+export default function promiseMiddleware() {
   return next => action => {
-    const { async, type, ...rest } = action;
+    const { promise, type, ...rest } = action;
 
-    if (!async) return next(action);
+    if (!promise) return next(action);
 
     const REQUEST = type + '_REQUEST';
     const SUCCESS = type + '_SUCCESS';
@@ -13,7 +10,7 @@ export default function promiseMiddleware(
 
     next({ ...rest, type: REQUEST });
 
-    return axios.get(async.url)
+    return promise
       .then(res => {
         next({ ...rest, res, type: SUCCESS });
         return true;

@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { fetchInfo, updateInfo } from '../actions/actions';
 import Info from '../components/Info';
+import { config } from '../config';
 
 export class Root extends Component {
   static propTypes = {
@@ -10,7 +11,7 @@ export class Root extends Component {
   }
 
   static needs = [
-    fetchInfo
+    { fn: fetchInfo, url: config.url.info  }
   ]
 
   render() {
