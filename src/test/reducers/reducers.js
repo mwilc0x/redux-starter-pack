@@ -1,11 +1,15 @@
 import expect from 'expect';
 import moment from 'moment';
 import * as reducers from '../../reducers/reducers';
-import { UPDATE_INFO } from '../../actions/actions';
+import {
+  UPDATE_INFO,
+  FETCH_INFO_REQUEST,
+  FETCH_INFO_SUCCESS
+} from '../../actions/actions';
 
 describe('reducer', () => {
   it('should handle a fetch info request', () => {
-    const action = { type: reducers.FETCH_INFO_REQUEST }
+    const action = { type: FETCH_INFO_REQUEST }
     const expectedState = { isFetching: true }
     expect(reducers.info(null, action)).toEqual(expectedState);
   });
@@ -14,7 +18,7 @@ describe('reducer', () => {
     const timestamp = moment();
     const info = { message: 'hello world!' };
     const action = {
-      type: reducers.FETCH_INFO_SUCCESS,
+      type: FETCH_INFO_SUCCESS,
       res: {
         data: info
       },

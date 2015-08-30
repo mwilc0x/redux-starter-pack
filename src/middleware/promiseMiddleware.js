@@ -1,23 +1,18 @@
 export default function promiseMiddleware() {
   return next => action => {
-    const { promise, type, ...rest } = action;
+    const { promise, types, ...rest } = action;
 
     if (!promise) return next(action);
 
-    const REQUEST = type + '_REQUEST';
-    const SUCCESS = type + '_SUCCESS';
-    const FAILURE = type + '_FAILURE';
-
-    next({ ...rest, type: REQUEST });
+    next({ ...rest, type: types[0] });
 
     return promise
       .then(res => {
-        next({ ...rest, res, type: SUCCESS });
+        next({ ...rest, res, type: types[1] });
         return true;
       })
       .catch(error => {
-        next({ ...rest, error, type: FAILURE });
-
+        next({ ...rest, error, type: types[2] });
         return false;
       });
   };

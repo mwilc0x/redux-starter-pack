@@ -5,11 +5,12 @@ import apiMiddleware from '../middleware/apiMiddleware';
 import promiseMiddleware from '../middleware/promiseMiddleware';
 import timestampMiddleware from '../middleware/timestampMiddleware';
 import axios from 'axios';
+import moment from 'moment';
 
 const createStoreWithMiddleware = applyMiddleware(
   apiMiddleware(axios),
   promiseMiddleware,
-  timestampMiddleware,
+  timestampMiddleware(moment),
   loggerMiddleware
 )(createStore);
 

@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import { UPDATE_INFO } from '../actions/actions';
-
-export const FETCH_INFO_REQUEST = 'FETCH_INFO_REQUEST';
-export const FETCH_INFO_SUCCESS = 'FETCH_INFO_SUCCESS';
-export const FETCH_INFO_FAILURE = 'FETCH_INFO_FAILURE';
+import {
+  UPDATE_INFO,
+  FETCH_INFO_REQUEST,
+  FETCH_INFO_SUCCESS
+} from '../actions/actions';
 
 export function info(state = {
   isFetching: false,

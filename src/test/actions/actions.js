@@ -1,15 +1,19 @@
 import expect from 'expect';
 import * as actions from '../../actions/actions';
+import { config } from '../../config';
 
 describe('actions', () => {
   it('should create an action to fetch info', () => {
-    const url = 'http://localhost:8080/content/json/info.json';
     const expectedAction = {
-      type: actions.FETCH_INFO,
-      async: true,
-      url: url
+      types: [
+        actions.FETCH_INFO_REQUEST,
+        actions.FETCH_INFO_SUCCESS,
+        actions.FETCH_INFO_FAILURE
+      ],
+      request: true,
+      url: config.url.info
     };
-    expect(actions.fetchInfo(url)).toEqual(expectedAction);
+    expect(actions.fetchInfo(config.url.info)).toEqual(expectedAction);
   });
 
   it('should create an action to update info', () => {

@@ -2,12 +2,12 @@ export default function apiMiddleware(client) {
   return () => next => action => {
     if (!action) return next(action);
 
-    const { async, url, type, ...rest } = action;
+    const { request, url, types, ...rest } = action;
 
-    if (!async) return next(action);
+    if (!request) return next(action);
 
     const promise = client.get(url);
 
-    return next({ promise: promise, type });
+    return next({ promise: promise, types });
   };
 }
