@@ -41,6 +41,7 @@ app.use((req, res) => {
           <title>hello world</title>
 
           <script>
+            window.__SERVER_PAYLOAD__ = ${JSON.stringify(routeState)};
             window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
           </script>
 

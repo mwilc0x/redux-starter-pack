@@ -14,6 +14,14 @@ export class Root extends Component {
     { fn: fetchInfo, url: config.url.info  }
   ]
 
+  componentDidMount() {
+    if(window.__SERVER_PAYLOAD__) {
+      window.__SERVER_PAYLOAD__ = null;
+    } else {
+      this.props.dispatch(fetchInfo(config.url.info))
+    }
+  }
+
   render() {
     const {
       infoStore,
