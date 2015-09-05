@@ -7,6 +7,10 @@ export class Info extends Component {
     this.state = { message: props.store.info.message };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({message: nextProps.store.info.message });
+  }
+
   handleChange(e) {
     this.setState({message: e.target.value});
   }
