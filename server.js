@@ -1,8 +1,8 @@
 import express from 'express';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import Router from 'react-router';
-import Location from 'react-router/lib/Location';
+import { match, RoutingContext } from 'react-router';
+import createLocation from 'history/lib/createLocation';
 import routes from './src/routes';
 import { Provider } from 'react-redux';
 import configureStore from './src/lib/configureStore';
@@ -13,19 +13,19 @@ const app = express();
 app.use(express.static(__dirname + '/'));
 
 app.use((req, res) => {
-  const location = new Location(req.path, req.query);
+  let location = createLocation(req.url)
 
-  Router.run(routes, location, (err, routeState) => {
+  match({ routes, location }, (err, redirectLocation, renderProps) => {
     if (err) return console.error(err);
 
-    if (!routeState) return res.status(404).end('404');
+    if (!renderProps) return res.status(404).end('404');
 
     const store = configureStore();
 
     function renderView() {
       const InitialView = (
         <Provider store={store}>
-            <Router {...routeState} />
+            <RoutingContext {...renderProps} />
         </Provider>
       );
 
@@ -41,7 +41,7 @@ app.use((req, res) => {
           <title>hello world</title>
 
           <script>
-            window.__SERVER_PAYLOAD__ = ${JSON.stringify(routeState)};
+            window.__SERVER_PAYLOAD__ = ${JSON.stringify(renderProps)};
             window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
           </script>
 
@@ -57,7 +57,7 @@ app.use((req, res) => {
       return HTML;
     }
 
-    fetchComponentData(store.dispatch, routeState.components, routeState.params)
+    fetchComponentData(store.dispatch, renderProps.components)
       .then(renderView)
       .then(html => res.end(html))
       .catch(error => res.end(error.message));
