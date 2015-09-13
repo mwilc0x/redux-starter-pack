@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import {routerStateReducer} from 'redux-react-router';
+
 import {
   UPDATE_INFO,
   FETCH_INFO_REQUEST,
@@ -30,4 +32,7 @@ export function info(state = {
   }
 }
 
-export default combineReducers({info});
+export default combineReducers({
+  router: routerStateReducer,
+  info
+});

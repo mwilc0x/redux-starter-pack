@@ -5,8 +5,9 @@ import { match, RoutingContext } from 'react-router';
 import createLocation from 'history/lib/createLocation';
 import routes from './src/routes';
 import { Provider } from 'react-redux';
-import configureStore from './src/lib/configureStore';
+import {configureStore} from './src/lib/configureStore';
 import fetchComponentData from './src/middleware/fetchComponentData';
+import {ReduxRouter} from 'redux-react-router';
 
 const app = express();
 
@@ -25,7 +26,7 @@ app.use((req, res) => {
     function renderView() {
       const InitialView = (
         <Provider store={store}>
-            <RoutingContext {...renderProps} />
+            <ReduxRouter />
         </Provider>
       );
 

@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Router from 'react-router';
-import routes from './routes';
+import {ReduxRouter} from 'redux-react-router';
 import { Provider } from 'react-redux';
-import configureStore from './lib/configureStore';
+import {configureStore} from './lib/configureStore';
 
-const store = configureStore(window.__INITIAL_STATE__);
+const store = configureStore(); // works
+
+// const store = configureStore(window.__INITIAL_STATE__); // doesn't work :(
 
 ReactDOM.render(
   <Provider store={store}>
-      <Router children={routes} />
+      <ReduxRouter />
   </Provider>,
   document.getElementById('app')
 );
