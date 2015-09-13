@@ -5,8 +5,7 @@ import { Info } from '../../components/Info';
 import jsdomReact from '../jsdomReact';
 
 function setup() {
-
-  let props = {
+  const props = {
     dispatch: expect.createSpy(),
     store: { info: { message: '' }},
     updateInfo: expect.createSpy()
@@ -31,8 +30,8 @@ describe('components', () => {
 
   describe('Info', () => {
     it('should update state when input is updated', () => {
-      const { input, props } = setup();
-      TestUtils.Simulate.change(input[0], {target: {value: "new value"}});
+      const { input } = setup();
+      TestUtils.Simulate.change(input[0], {target: {value: 'new value'}});
       expect(input[0].value).toEqual('new value');
     });
 
@@ -41,6 +40,5 @@ describe('components', () => {
       TestUtils.Simulate.click(buttons[0]);
       expect(props.updateInfo).toHaveBeenCalled();
     });
-
   });
 });

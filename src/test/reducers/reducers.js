@@ -9,8 +9,8 @@ import {
 
 describe('reducer', () => {
   it('should handle a fetch info request', () => {
-    const action = { type: FETCH_INFO_REQUEST }
-    const expectedState = { isFetching: true }
+    const action = { type: FETCH_INFO_REQUEST };
+    const expectedState = { isFetching: true };
     expect(reducers.info(null, action)).toEqual(expectedState);
   });
 

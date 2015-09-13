@@ -5,8 +5,7 @@ import { Root } from '../../containers/Root';
 import jsdomReact from '../jsdomReact';
 
 function setup() {
-
-  let props = {
+  const props = {
     dispatch: expect.createSpy(),
     fetchInfo: expect.createSpy(),
     infoStore: { info: { message: '' }},
@@ -31,14 +30,13 @@ describe('containers', () => {
 
   describe('Root', () => {
     it('should have a title', () => {
-      const { h1, props } = setup();
+      const { h1 } = setup();
       expect(h1[0].textContent).toEqual('Root Container');
     });
 
     it('should render an Info component', () => {
-      const { Info, props } = setup();
+      const { Info } = setup();
       expect(Info[0]).toExist();
     });
-
   });
 });
