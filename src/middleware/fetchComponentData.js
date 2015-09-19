@@ -4,7 +4,7 @@ export default function fetchComponentData(dispatch, components) {
       .concat((current.WrappedComponent ? current.WrappedComponent.needs : []) || [])
       .concat(prev);
   }, []);
-
+  
   const promises = needs.map(need => dispatch(need.fn(need.url)));
 
   return Promise.all(promises);

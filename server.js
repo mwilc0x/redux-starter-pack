@@ -1,13 +1,14 @@
 import express from 'express';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import { match, RoutingContext } from 'react-router';
+import {RoutingContext} from 'react-router';
 import createLocation from 'history/lib/createLocation';
 import routes from './src/routes';
-import { Provider } from 'react-redux';
-import {configureStore} from './src/lib/configureStore';
+import {Provider} from 'react-redux';
 import fetchComponentData from './src/middleware/fetchComponentData';
-import {ReduxRouter} from 'redux-react-router';
+import {ReduxRouter} from 'redux-router';
+import {match} from 'redux-router/server';
+import {configureStore} from './src/lib/configureStore';
 
 const app = express();
 
@@ -16,12 +17,12 @@ app.use(express.static(__dirname + '/'));
 app.use((req, res) => {
   let location = createLocation(req.url)
 
-  match({ routes, location }, (err, redirectLocation, renderProps) => {
+  const store = configureStore('server');
+
+  store.dispatch(match('/', (err, redirectLocation, renderProps) => {
     if (err) return console.error(err);
 
     if (!renderProps) return res.status(404).end('404');
-
-    const store = configureStore();
 
     function renderView() {
       const InitialView = (
@@ -59,10 +60,10 @@ app.use((req, res) => {
     }
 
     fetchComponentData(store.dispatch, renderProps.components)
-      .then(renderView)
-      .then(html => res.end(html))
-      .catch(error => res.end(error.message));
-  });
+     .then(renderView)
+     .then(html => res.end(html))
+     .catch(error => res.end(error.message));
+  }));
 });
 
 export default app;

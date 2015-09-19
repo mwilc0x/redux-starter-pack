@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import {routerStateReducer} from 'redux-react-router';
+import {routerStateReducer} from 'redux-router';
 
 import {
   UPDATE_INFO,
