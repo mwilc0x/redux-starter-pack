@@ -11,19 +11,14 @@ import timestampMiddleware from '../middleware/timestampMiddleware';
 import axios from 'axios';
 import moment from 'moment';
 
-function createRouter(args, router) {
-  const {routes, createHistory} = args;
-  return router({ routes, createHistory })
-}
-
 export function configureStore(target, initialState) {
   let router;
 
   if (target === 'client') {
     initialState.router = null;
-    router = createRouter({routes, createHistory}, clientRouter)
+    router = clientRouter({routes, createHistory});
   } else if (target === 'server') {
-    router = createRouter({routes}, serverRouter)
+    router = serverRouter({routes});
   }
 
   return compose(
