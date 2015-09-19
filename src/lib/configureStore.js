@@ -15,7 +15,6 @@ export function configureStore(target, initialState) {
   let router;
 
   if (target === 'client') {
-    initialState.router = null;
     router = clientRouter({routes, createHistory});
   } else if (target === 'server') {
     router = serverRouter({routes});
