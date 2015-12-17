@@ -3,8 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: [
-    'webpack-dev-server/client?http://localhost:8080',
-    'webpack/hot/only-dev-server',
+    'webpack-hot-middleware/client',
     './src/client'
   ],
   output: {
@@ -13,7 +12,9 @@ module.exports = {
     publicPath: '/static/'
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin()
   ],
   resolve: {
     extensions: ['', '.js']
@@ -21,15 +22,13 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.js$/,
-      loaders: ['react-hot', 'babel'],
+      loader: 'babel',
+      query: {
+        presets: ['react', 'es2015', 'stage-2'],
+        plugins: ['transform-class-properties']
+      },
       exclude: /node_modules/
     }]
   },
-  devtool: 'inline-source-map',
-  devServer: {
-    hot: true,
-    proxy: {
-      '*': 'http://localhost:' + (process.env.PORT || 3000)
-    }
-  }
+  devtool: 'inline-source-map'
 };

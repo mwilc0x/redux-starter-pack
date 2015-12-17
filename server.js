@@ -1,28 +1,54 @@
-import express from 'express';
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import {RoutingContext} from 'react-router';
-import createLocation from 'history/lib/createLocation';
-import routes from './src/routes';
-import {Provider} from 'react-redux';
-import fetchComponentData from './src/middleware/fetchComponentData';
+import express from "express";
+import React from "react";
+import { renderToString } from 'react-dom/server';
+import {RoutingContext, match} from "react-router";
 import {ReduxRouter} from 'redux-router';
-import {match} from 'redux-router/server';
-import {configureStore} from './src/lib/configureStore';
+import { createLocation } from 'history'
+import routes from "./src/routes";
+import { Provider } from 'react-redux';
+import { configureStore } from './src/lib/configureStore';
+import fetchComponentData from './src/middleware/fetchComponentData';
 
-const app = express();
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+import webpackConfig from './webpack.config';
 
-app.use(express.static(__dirname + '/'));
+const server = express();
 
-app.use((req, res) => {
-  let location = createLocation(req.url)
+var config = {};
+var host = config.host || 'localhost';
+var port = (config.port + 1) || 3001;
+
+var serverOptions = {
+  contentBase: 'http://' + host + ':' + port,
+  quiet: true,
+  noInfo: true,
+  hot: true,
+  inline: true,
+  lazy: false,
+  publicPath: webpackConfig.output.publicPath,
+  headers: {'Access-Control-Allow-Origin': '*'},
+  stats: {colors: true}
+};
+
+// Use this middleware to set up hot module reloading via webpack.
+const compiler = webpack(webpackConfig)
+server.use(webpackDevMiddleware(compiler, serverOptions))
+server.use(webpackHotMiddleware(compiler))
+
+server.use(express.static(__dirname + "/"));
+
+server.use((req, res) => {
+  const location = createLocation(req.url);
 
   const store = configureStore('server');
 
-  store.dispatch(match('/', (err, redirectLocation, renderProps) => {
-    if (err) return console.error(err);
+  match({ routes, location: "/" }, (err, redirectLocation, renderProps) => {
 
-    if (!renderProps) return res.status(404).end('404');
+    if(err) return console.error(err);
+
+    if(!renderProps) return res.status(404).end('404');
 
     function renderView() {
       const InitialView = (
@@ -31,39 +57,38 @@ app.use((req, res) => {
         </Provider>
       );
 
-      const componentHTML = ReactDOMServer.renderToStaticMarkup(InitialView);
+      const componentHTML = renderToString(InitialView);
 
       const initialState = store.getState();
 
       const HTML = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="utf-8">
-          <title>hello world</title>
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <title>bio.</title>
 
-          <script>
-            window.__SERVER_PAYLOAD__ = ${JSON.stringify(renderProps)};
-            window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
-          </script>
+            <script>
+              window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
+            </script>
 
-          <link href='/content/css/app.css' rel='stylesheet' type='text/css'>
-        </head>
-        <body class="theme-default">
-          <div id="app">${componentHTML}</div>
-          <script type="application/javascript" src="/static/bundle.js"></script>
-        </body>
-      </html>
-      `;
+            <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+            <link href='/content/css/app.css' rel='stylesheet' type='text/css'>
+          </head>
+          <body class="theme-default">
+            <div id="app">${componentHTML}</div>
+            <script type="application/javascript" src="/static/bundle.js"></script>
+          </body>
+        </html>`;
 
       return HTML;
     }
 
     fetchComponentData(store.dispatch, renderProps.components)
-     .then(renderView)
-     .then(html => res.end(html))
-     .catch(error => res.end(error.message));
-  }));
+      .then(renderView)
+      .then(html => res.end(html))
+      .catch(err => res.end(err.message));
+  });
 });
 
-export default app;
+export { server };
